@@ -48,3 +48,7 @@ The system defines interactive surfaces given their background color and their t
 In vanilla Tailwind syntax, though, that would force us to define extra shades for every combination of background and text colors we need.
 
 With the plugin, an interactive surface can be defined as `bg-red-800 text-white bg-mix-white bg-mix-amount-0 hover:bg-mix-amount-8 active:bg-mix-amount-12`, assuming 8 and 12 exist in the background opacity theme config.
+
+## Beyond background color
+
+I haven't found the need to extend this library to other color properties such as text color, border, fill, stroke, ring... but it shouldn't be hard to do so. Feel free to open a feature request if you need color mixing on one or more specific properties.
