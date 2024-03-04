@@ -33,6 +33,8 @@ This is achieved with native CSS [color-mix](https://developer.mozilla.org/en-US
 
 <!-- TODO explain with examples -->
 
+You can also use arbitrary percentage values for amount such as `bg-mix-amount-[42%]`.
+
 ## Interpolation method
 
 Default interpolation method is `srgb` but you can also use `hsl shorter hue` or `hsl-longer-hue` with the `bg-mix-method-shorter-hue` and `bg-mix-method-longer-hue` utilities.

@@ -55,6 +55,28 @@ describe("tailwindcss-color-mix", () => {
     );
   });
 
+  describe("With arbitrary amount", () => {
+    it("bg-mix-amount defines --tw-bg-mix-amount", () => {
+      const config = {
+        content: [{ raw: "bg-mix-amount-[42%]" }],
+        theme,
+        plugins: [colorMix],
+      };
+
+      let utilitiesCSS = postcss([tailwindcss(config)]).process(
+        "@tailwind utilities"
+      ).css;
+
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
+        `
+      .bg-mix-amount-\\[42\\%\\] {
+        --tw-bg-mix-amount: 42%
+      }
+    `.replace(/\n|\s|\t/g, "")
+      );
+    });
+  });
+
   it("bg defines --tw-bg-base", () => {
     const config = {
       content: [{ raw: "bg-white" }],
