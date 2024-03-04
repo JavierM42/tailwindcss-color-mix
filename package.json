@@ -1,0 +1,28 @@
+{
+  "name": "tailwindcss-color-mix",
+  "version": "0.0.4",
+  "description": "TailwindCSS plugin to mix colors through utility classes",
+  "main": "src/index.js",
+  "license": "MIT",
+  "repository": "https://github.com/JavierM42/tailwind-color-mix",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "tailwindcss": "^3.0.0"
+  },
+  "keywords": [
+    "tailwind",
+    "colors",
+    "color",
+    "color-mix",
+    "overlay"
+  ],
+  "devDependencies": {
+    "jest": "^29.7",
+    "postcss": "^8.2.4",
+    "tailwindcss": "^3.0.0"
+  },
+  "author": "Javier Morales"
+}
