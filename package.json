@@ -1,10 +1,10 @@
 {
   "name": "tailwindcss-color-mix",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A plugin for TailwindCSS to build new colors by mixing two existing ones.",
   "main": "src/index.js",
   "license": "MIT",
-  "repository": "https://github.com/JavierM42/tailwind-color-mix",
+  "repository": "https://github.com/JavierM42/tailwindcss-color-mix",
   "scripts": {
     "test": "jest"
   },
