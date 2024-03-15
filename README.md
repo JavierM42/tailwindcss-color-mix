@@ -37,7 +37,7 @@ Then, import it in `tailwind.config.js`:
 - `bg-red bg-mix-black bg-mix-amount-50` will mix 50% black into red.
   - In CSS terms, the result will be `color-mix(in srgb, black 50%, red)`.
 
-You can also use arbitrary percentage values for amount such as `bg-mix-amount-[42%]`.
+You can also use arbitrary values for amount such as `bg-mix-amount-[42]` (for 42%).
 
 The default mix amount is zero.
 
