@@ -27,7 +27,7 @@ describe("tailwindcss-color-mix", () => {
         --tw-bg-mix-opacity: 1;
         background-color: color-mix(
           var(--tw-bg-mix-method, in srgb),
-          rgb(0 0 0 / var(--tw-bg-mix-opacity)) var(--tw-bg-mix-amount, 0%),
+          rgb(0 0 0 / var(--tw-bg-mix-opacity)) calc(var(--tw-bg-mix-amount, 0) * 1%),
           var(--tw-bg-base)
         )
       }
@@ -49,7 +49,7 @@ describe("tailwindcss-color-mix", () => {
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
       .bg-mix-amount-50 {
-        --tw-bg-mix-amount: 50%
+        --tw-bg-mix-amount: 50
       }
     `.replace(/\n|\s|\t/g, "")
     );
@@ -58,7 +58,7 @@ describe("tailwindcss-color-mix", () => {
   describe("With arbitrary amount", () => {
     it("bg-mix-amount defines --tw-bg-mix-amount", () => {
       const config = {
-        content: [{ raw: "bg-mix-amount-[42%]" }],
+        content: [{ raw: "bg-mix-amount-[42]" }],
         theme,
         plugins: [colorMix()],
       };
@@ -69,8 +69,8 @@ describe("tailwindcss-color-mix", () => {
 
       expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
         `
-      .bg-mix-amount-\\[42\\%\\] {
-        --tw-bg-mix-amount: 42%
+      .bg-mix-amount-\\[42\\] {
+        --tw-bg-mix-amount: 42
       }
     `.replace(/\n|\s|\t/g, "")
       );
@@ -158,12 +158,12 @@ describe("tailwindcss-color-mix", () => {
           --tw-bg-mix-opacity: 1;
           background-color: color-mix(
             var(--tw-bg-mix-method, in srgb),
-            rgb(0 0 0 / var(--tw-bg-mix-opacity)) var(--tw-bg-mix-amount, 0%),
+            rgb(0 0 0 / var(--tw-bg-mix-opacity)) calc(var(--tw-bg-mix-amount, 0) * 1%),
             var(--tw-bg-base)
           )
         }
         .overlay-amount-50 {
-          --tw-bg-mix-amount: 50%
+          --tw-bg-mix-amount: 50
         }
         .overlay-method-shorter-hue {
           --tw-bg-mix-method: in hsl shorter hue

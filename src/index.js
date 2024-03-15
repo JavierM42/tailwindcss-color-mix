@@ -29,7 +29,7 @@ module.exports = (options = {}) =>
 
           return {
             ...rest,
-            "background-color": `color-mix(var(--tw-bg-mix-method, in srgb), ${mixColor} var(--tw-bg-mix-amount, 0%), var(--tw-bg-base))`,
+            "background-color": `color-mix(var(--tw-bg-mix-method, in srgb), ${mixColor} calc(var(--tw-bg-mix-amount, 0) * 1%), var(--tw-bg-base))`,
           };
         },
       },
@@ -50,7 +50,7 @@ module.exports = (options = {}) =>
         values: Object.fromEntries(
           Object.entries(theme("backgroundOpacity")).map(([key, value]) => [
             key,
-            `${value * 100}%`,
+            `${value * 100}`,
           ])
         ),
       }
