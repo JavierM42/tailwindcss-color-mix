@@ -172,4 +172,36 @@ describe("tailwindcss-color-mix", () => {
       );
     });
   });
+
+  describe("With arbitrary values in colors", () => {
+    it("defined specified class names", async () => {
+      const config = {
+        content: [
+          {
+            raw: "bg-[#ff0000]",
+          },
+        ],
+        theme,
+        plugins: [
+          colorMix({
+            bgMix: "bg-overlay",
+            bgMixAmount: "overlay-amount",
+            bgMixMethod: "overlay-method",
+          }),
+        ],
+      };
+
+      let utilitiesCSS = await postcss([require("tailwindcss")(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
+
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toContain(
+        `
+          .bg-\\[\\#ff0000\\]  {
+            --tw-bg-opacity: 1;
+            background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1))
+          }`.replace(/\n|\s|\t/g, "")
+      );
+    });
+  });
 });
