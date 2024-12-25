@@ -10,16 +10,16 @@ const theme = {
 };
 
 describe("tailwindcss-color-mix", () => {
-  it("bg-mix overrides background-color", () => {
+  it("bg-mix overrides background-color", async () => {
     const config = {
       content: [{ raw: "bg-mix-black" }],
       theme,
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
@@ -35,16 +35,16 @@ describe("tailwindcss-color-mix", () => {
     );
   });
 
-  it("bg-mix-amount defines --tw-bg-mix-amount", () => {
+  it("bg-mix-amount defines --tw-bg-mix-amount", async () => {
     const config = {
       content: [{ raw: "bg-mix-amount-50" }],
       theme,
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
@@ -56,16 +56,16 @@ describe("tailwindcss-color-mix", () => {
   });
 
   describe("With arbitrary amount", () => {
-    it("bg-mix-amount defines --tw-bg-mix-amount", () => {
+    it("bg-mix-amount defines --tw-bg-mix-amount", async () => {
       const config = {
         content: [{ raw: "bg-mix-amount-[42]" }],
         theme,
         plugins: [colorMix()],
       };
 
-      let utilitiesCSS = postcss([tailwindcss(config)]).process(
-        "@tailwind utilities"
-      ).css;
+      let utilitiesCSS = await postcss([tailwindcss(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
 
       expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
         `
@@ -77,16 +77,16 @@ describe("tailwindcss-color-mix", () => {
     });
   });
 
-  it("bg defines --tw-bg-base", () => {
+  it("bg defines --tw-bg-base", async () => {
     const config = {
       content: [{ raw: "bg-white" }],
       theme,
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       // background-color comes from base config
@@ -100,7 +100,7 @@ describe("tailwindcss-color-mix", () => {
     );
   });
 
-  it("bg-mixmethod defines --tw-bg-mix-method", () => {
+  it("bg-mixmethod defines --tw-bg-mix-method", async () => {
     const config = {
       content: [
         {
@@ -111,9 +111,9 @@ describe("tailwindcss-color-mix", () => {
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
@@ -131,7 +131,7 @@ describe("tailwindcss-color-mix", () => {
   });
 
   describe("with alternative names", () => {
-    it("defines specified class names", () => {
+    it("defines specified class names", async () => {
       const config = {
         content: [
           {
@@ -148,9 +148,9 @@ describe("tailwindcss-color-mix", () => {
         ],
       };
 
-      let utilitiesCSS = postcss([tailwindcss(config)]).process(
-        "@tailwind utilities"
-      ).css;
+      let utilitiesCSS = await postcss([tailwindcss(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
 
       expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
         `
