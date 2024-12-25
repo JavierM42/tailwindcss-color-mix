@@ -5,6 +5,7 @@ const {
 } = require("tailwindcss/lib/util/flattenColorPalette");
 const {
   default: withAlphaVariable,
+  withAlphaValue,
 } = require("tailwindcss/lib/util/withAlphaVariable");
 
 const DEFAULTS = {
@@ -72,13 +73,27 @@ module.exports = (options = {}) =>
       }
     );
 
-    // add --tw-bg-base to bg-utility
+    const bgValues = flattenColorPalette(theme("backgroundColor"));
     matchUtilities(
       {
         bg: (value) => {
           if (!corePlugins("backgroundOpacity")) {
+            return { "background-color": toColorValue(value) };
+          }
+
+          // is arbitrary
+          if (!Object.values(bgValues).includes(value)) {
             return {
-              "background-color": toColorValue(value),
+              "background-color": withAlphaValue(
+                value,
+                "var(--tw-bg-opacity, 1)",
+                value
+              ),
+              ...withAlphaVariable({
+                color: value,
+                property: "--tw-bg-base",
+                variable: "--tw-bg-opacity",
+              }),
             };
           }
 
@@ -89,9 +104,6 @@ module.exports = (options = {}) =>
           });
         },
       },
-      {
-        values: flattenColorPalette(theme("backgroundColor")),
-        type: ["color", "any"],
-      }
+      { type: "color", values: bgValues }
     );
   });
