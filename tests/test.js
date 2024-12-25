@@ -27,7 +27,7 @@ describe("tailwindcss-color-mix", () => {
         --tw-bg-mix-opacity: 1;
         background-color: color-mix(
           var(--tw-bg-mix-method, in srgb),
-          rgb(0 0 0 / var(--tw-bg-mix-opacity)) calc(var(--tw-bg-mix-amount, 0) * 1%),
+          rgb(0 0 0 / var(--tw-bg-mix-opacity, 1)) calc(var(--tw-bg-mix-amount, 0) * 1%),
           var(--tw-bg-base)
         )
       }
@@ -92,9 +92,9 @@ describe("tailwindcss-color-mix", () => {
       // background-color comes from base config
       `
       .bg-white {
-        background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+        background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
         --tw-bg-opacity: 1;
-        --tw-bg-base: rgb(255 255 255 / var(--tw-bg-opacity))
+        --tw-bg-base: rgb(255 255 255 / var(--tw-bg-opacity, 1))
       }
     `.replace(/\n|\s|\t/g, "")
     );
@@ -158,7 +158,7 @@ describe("tailwindcss-color-mix", () => {
           --tw-bg-mix-opacity: 1;
           background-color: color-mix(
             var(--tw-bg-mix-method, in srgb),
-            rgb(0 0 0 / var(--tw-bg-mix-opacity)) calc(var(--tw-bg-mix-amount, 0) * 1%),
+            rgb(0 0 0 / var(--tw-bg-mix-opacity, 1)) calc(var(--tw-bg-mix-amount, 0) * 1%),
             var(--tw-bg-base)
           )
         }
