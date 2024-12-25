@@ -117,14 +117,14 @@ describe("tailwindcss-color-mix", () => {
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
-        .bg-mix-method-srgb {
-          --tw-bg-mix-method: in srgb
+        .bg-mix-method-longer-hue {
+          --tw-bg-mix-method: in hsl longer hue
         }
         .bg-mix-method-shorter-hue {
           --tw-bg-mix-method: in hsl shorter hue
         }
-        .bg-mix-method-longer-hue {
-          --tw-bg-mix-method: in hsl longer hue
+        .bg-mix-method-srgb {
+          --tw-bg-mix-method: in srgb
         }
       `.replace(/\n|\s|\t/g, "")
     );
@@ -198,8 +198,9 @@ describe("tailwindcss-color-mix", () => {
       expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toContain(
         `
           .bg-\\[\\#ff0000\\]  {
+            background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1));
             --tw-bg-opacity: 1;
-            background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1))
+            --tw-bg-base: rgb(255 0 0 / var(--tw-bg-opacity, 1))
           }`.replace(/\n|\s|\t/g, "")
       );
     });
