@@ -10,16 +10,16 @@ const theme = {
 };
 
 describe("tailwindcss-color-mix", () => {
-  it("bg-mix overrides background-color", () => {
+  it("bg-mix overrides background-color", async () => {
     const config = {
       content: [{ raw: "bg-mix-black" }],
       theme,
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
@@ -27,7 +27,7 @@ describe("tailwindcss-color-mix", () => {
         --tw-bg-mix-opacity: 1;
         background-color: color-mix(
           var(--tw-bg-mix-method, in srgb),
-          rgb(0 0 0 / var(--tw-bg-mix-opacity)) calc(var(--tw-bg-mix-amount, 0) * 1%),
+          rgb(0 0 0 / var(--tw-bg-mix-opacity, 1)) calc(var(--tw-bg-mix-amount, 0) * 1%),
           var(--tw-bg-base)
         )
       }
@@ -35,16 +35,16 @@ describe("tailwindcss-color-mix", () => {
     );
   });
 
-  it("bg-mix-amount defines --tw-bg-mix-amount", () => {
+  it("bg-mix-amount defines --tw-bg-mix-amount", async () => {
     const config = {
       content: [{ raw: "bg-mix-amount-50" }],
       theme,
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
@@ -56,16 +56,16 @@ describe("tailwindcss-color-mix", () => {
   });
 
   describe("With arbitrary amount", () => {
-    it("bg-mix-amount defines --tw-bg-mix-amount", () => {
+    it("bg-mix-amount defines --tw-bg-mix-amount", async () => {
       const config = {
         content: [{ raw: "bg-mix-amount-[42]" }],
         theme,
         plugins: [colorMix()],
       };
 
-      let utilitiesCSS = postcss([tailwindcss(config)]).process(
-        "@tailwind utilities"
-      ).css;
+      let utilitiesCSS = await postcss([tailwindcss(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
 
       expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
         `
@@ -77,30 +77,30 @@ describe("tailwindcss-color-mix", () => {
     });
   });
 
-  it("bg defines --tw-bg-base", () => {
+  it("bg defines --tw-bg-base", async () => {
     const config = {
       content: [{ raw: "bg-white" }],
       theme,
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       // background-color comes from base config
       `
       .bg-white {
-        background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+        background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
         --tw-bg-opacity: 1;
-        --tw-bg-base: rgb(255 255 255 / var(--tw-bg-opacity))
+        --tw-bg-base: rgb(255 255 255 / var(--tw-bg-opacity, 1))
       }
     `.replace(/\n|\s|\t/g, "")
     );
   });
 
-  it("bg-mixmethod defines --tw-bg-mix-method", () => {
+  it("bg-mixmethod defines --tw-bg-mix-method", async () => {
     const config = {
       content: [
         {
@@ -111,27 +111,27 @@ describe("tailwindcss-color-mix", () => {
       plugins: [colorMix()],
     };
 
-    let utilitiesCSS = postcss([tailwindcss(config)]).process(
-      "@tailwind utilities"
-    ).css;
+    let utilitiesCSS = await postcss([tailwindcss(config)])
+      .process("@tailwind utilities", { from: undefined })
+      .then((result) => result.css);
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       `
-        .bg-mix-method-srgb {
-          --tw-bg-mix-method: in srgb
+        .bg-mix-method-longer-hue {
+          --tw-bg-mix-method: in hsl longer hue
         }
         .bg-mix-method-shorter-hue {
           --tw-bg-mix-method: in hsl shorter hue
         }
-        .bg-mix-method-longer-hue {
-          --tw-bg-mix-method: in hsl longer hue
+        .bg-mix-method-srgb {
+          --tw-bg-mix-method: in srgb
         }
       `.replace(/\n|\s|\t/g, "")
     );
   });
 
   describe("with alternative names", () => {
-    it("defines specified class names", () => {
+    it("defines specified class names", async () => {
       const config = {
         content: [
           {
@@ -148,9 +148,9 @@ describe("tailwindcss-color-mix", () => {
         ],
       };
 
-      let utilitiesCSS = postcss([tailwindcss(config)]).process(
-        "@tailwind utilities"
-      ).css;
+      let utilitiesCSS = await postcss([tailwindcss(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
 
       expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
         `
@@ -158,7 +158,7 @@ describe("tailwindcss-color-mix", () => {
           --tw-bg-mix-opacity: 1;
           background-color: color-mix(
             var(--tw-bg-mix-method, in srgb),
-            rgb(0 0 0 / var(--tw-bg-mix-opacity)) calc(var(--tw-bg-mix-amount, 0) * 1%),
+            rgb(0 0 0 / var(--tw-bg-mix-opacity, 1)) calc(var(--tw-bg-mix-amount, 0) * 1%),
             var(--tw-bg-base)
           )
         }
@@ -169,6 +169,39 @@ describe("tailwindcss-color-mix", () => {
           --tw-bg-mix-method: in hsl shorter hue
         }
       `.replace(/\n|\s|\t/g, "")
+      );
+    });
+  });
+
+  describe("With arbitrary values in colors", () => {
+    it("defined specified class names", async () => {
+      const config = {
+        content: [
+          {
+            raw: "bg-[#ff0000]",
+          },
+        ],
+        theme,
+        plugins: [
+          colorMix({
+            bgMix: "bg-overlay",
+            bgMixAmount: "overlay-amount",
+            bgMixMethod: "overlay-method",
+          }),
+        ],
+      };
+
+      let utilitiesCSS = await postcss([require("tailwindcss")(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
+
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toContain(
+        `
+          .bg-\\[\\#ff0000\\]  {
+            background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1));
+            --tw-bg-opacity: 1;
+            --tw-bg-base: rgb(255 0 0 / var(--tw-bg-opacity, 1))
+          }`.replace(/\n|\s|\t/g, "")
       );
     });
   });
