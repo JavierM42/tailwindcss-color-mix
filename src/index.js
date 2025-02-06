@@ -17,6 +17,26 @@ module.exports = (options = {}) =>
   plugin(({ matchUtilities, theme, corePlugins }) => {
     const { bgMix, bgMixAmount, bgMixMethod } = { ...DEFAULTS, ...options };
 
+    // add --tw-bg-base to bg-utility
+    matchUtilities(
+      {
+        bg: (value) => {
+          if (!corePlugins("backgroundOpacity")) {
+            return {
+              "background-color": toColorValue(value),
+            };
+          }
+
+          return withAlphaVariable({
+            color: value,
+            property: "--tw-bg-base",
+            variable: "--tw-bg-opacity",
+          });
+        },
+      },
+      { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
+    );
+
     // add bg-mix utility
     matchUtilities(
       {
@@ -67,25 +87,5 @@ module.exports = (options = {}) =>
           "longer-hue": "in hsl longer hue",
         },
       }
-    );
-
-    // add --tw-bg-base to bg-utility
-    matchUtilities(
-      {
-        bg: (value) => {
-          if (!corePlugins("backgroundOpacity")) {
-            return {
-              "background-color": toColorValue(value),
-            };
-          }
-
-          return withAlphaVariable({
-            color: value,
-            property: "--tw-bg-base",
-            variable: "--tw-bg-opacity",
-          });
-        },
-      },
-      { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
     );
   });
