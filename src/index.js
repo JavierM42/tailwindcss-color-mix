@@ -92,4 +92,15 @@ module.exports = (options = {}) =>
         },
       }
     );
+
+    /* use cascading to override opacity we define with our custom bg utility
+      this is not ideal because we duplicate tailwind's bg-opacity
+      TODO: come up with a better solution
+    */
+    matchUtilities(
+      {
+        "bg-opacity": (value) => ({ "--tw-bg-opacity": value }),
+      },
+      { values: theme("opacity"), type: "number" }
+    );
   });
