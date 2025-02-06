@@ -5,6 +5,7 @@ const {
 } = require("tailwindcss/lib/util/flattenColorPalette");
 const {
   default: withAlphaVariable,
+  withAlphaValue,
 } = require("tailwindcss/lib/util/withAlphaVariable");
 
 const DEFAULTS = {
@@ -27,11 +28,14 @@ module.exports = (options = {}) =>
             };
           }
 
-          return withAlphaVariable({
-            color: value,
-            property: "--tw-bg-base",
-            variable: "--tw-bg-opacity",
-          });
+          return {
+            backgroundColor: "var(--tw-bg-base)",
+            ...withAlphaVariable({
+              color: value,
+              property: "--tw-bg-base",
+              variable: "--tw-bg-opacity",
+            }),
+          };
         },
       },
       { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
