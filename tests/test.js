@@ -90,9 +90,12 @@ describe("tailwindcss-color-mix", () => {
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       // background-color comes from base config
+      // TODO: prevent duplication of background-color
+      // it doesn't affect the code as our background-color just overrides tailwind's one
       `
       .bg-white {
         background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+        background-color: var(--tw-bg-base);
         --tw-bg-opacity: 1;
         --tw-bg-base: rgb(255 255 255 / var(--tw-bg-opacity, 1))
       }
@@ -178,7 +181,7 @@ describe("tailwindcss-color-mix", () => {
       const config = {
         content: [
           {
-            raw: "bg-[#ff0000]",
+            raw: "bg-[#ff0000] bg-mix-[#00ff00] bg-mix-amount-50",
           },
         ],
         theme,
@@ -195,10 +198,10 @@ describe("tailwindcss-color-mix", () => {
         .process("@tailwind utilities", { from: undefined })
         .then((result) => result.css);
 
-      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toContain(
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
         `
           .bg-\\[\\#ff0000\\]  {
-            background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1));
+            background-color: var(--tw-bg-base);
             --tw-bg-opacity: 1;
             --tw-bg-base: rgb(255 0 0 / var(--tw-bg-opacity, 1))
           }`.replace(/\n|\s|\t/g, "")
