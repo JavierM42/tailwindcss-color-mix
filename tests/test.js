@@ -90,9 +90,12 @@ describe("tailwindcss-color-mix", () => {
 
     expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
       // background-color comes from base config
+      // TODO: prevent duplication of background-color
+      // it doesn't affect the code as our background-color just overrides tailwind's one
       `
       .bg-white {
         background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+        background-color: var(--tw-bg-base);
         --tw-bg-opacity: 1;
         --tw-bg-base: rgb(255 255 255 / var(--tw-bg-opacity, 1))
       }
@@ -173,8 +176,8 @@ describe("tailwindcss-color-mix", () => {
     });
   });
 
-  describe("With arbitrary values in colors", () => {
-    it("defined specified class names", async () => {
+  describe("with opacity and arbitrary colors", () => {
+    it("doesn't break arbitrary colors", async () => {
       const config = {
         content: [
           {
@@ -195,12 +198,113 @@ describe("tailwindcss-color-mix", () => {
         .process("@tailwind utilities", { from: undefined })
         .then((result) => result.css);
 
-      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toContain(
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
         `
           .bg-\\[\\#ff0000\\]  {
-            background-color: rgb(255 0 0 / var(--tw-bg-opacity, 1));
+            background-color: var(--tw-bg-base);
             --tw-bg-opacity: 1;
             --tw-bg-base: rgb(255 0 0 / var(--tw-bg-opacity, 1))
+          }`.replace(/\n|\s|\t/g, "")
+      );
+    });
+    it("mixing works with arbitrary colors", async () => {
+      const config = {
+        content: [
+          {
+            raw: "bg-[#ff0000] bg-mix-[#00ff00] bg-mix-amount-50",
+          },
+        ],
+        theme,
+        plugins: [
+          colorMix({
+            bgMix: "bg-overlay",
+            bgMixAmount: "overlay-amount",
+            bgMixMethod: "overlay-method",
+          }),
+        ],
+      };
+
+      let utilitiesCSS = await postcss([require("tailwindcss")(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
+
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
+        `
+          .bg-\\[\\#ff0000\\]  {
+            background-color: var(--tw-bg-base);
+            --tw-bg-opacity: 1;
+            --tw-bg-base: rgb(255 0 0 / var(--tw-bg-opacity, 1))
+          }`.replace(/\n|\s|\t/g, "")
+      );
+    });
+    it("works with opacity", async () => {
+      const config = {
+        content: [
+          {
+            raw: "bg-black bg-mix-white bg-mix-amount-50",
+          },
+        ],
+        theme,
+        plugins: [
+          colorMix({
+            bgMix: "bg-overlay",
+            bgMixAmount: "overlay-amount",
+            bgMixMethod: "overlay-method",
+          }),
+        ],
+      };
+
+      let utilitiesCSS = await postcss([require("tailwindcss")(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
+
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
+        `
+          .bg-black  {
+            background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
+            background-color: var(--tw-bg-base);
+            --tw-bg-opacity: 1;
+            --tw-bg-base: rgb(0 0 0 / var(--tw-bg-opacity, 1))
+          }`.replace(/\n|\s|\t/g, "")
+      );
+    });
+    it("works with opacity and arbitrary colors", async () => {
+      const config = {
+        content: [
+          {
+            raw: "bg-black bg-opacity-50 bg-mix-white bg-mix-amount-50",
+          },
+        ],
+        theme,
+        plugins: [
+          colorMix({
+            bgMix: "bg-overlay",
+            bgMixAmount: "overlay-amount",
+            bgMixMethod: "overlay-method",
+          }),
+        ],
+      };
+
+      let utilitiesCSS = await postcss([require("tailwindcss")(config)])
+        .process("@tailwind utilities", { from: undefined })
+        .then((result) => result.css);
+
+      expect(utilitiesCSS.replace(/\n|\s|\t/g, "")).toBe(
+        `
+          .bg-black  {
+            --tw-bg-opacity: 1;
+            background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1))
+          }
+          .bg-opacity-50 {
+            --tw-bg-opacity: 0.5
+          }
+          .bg-black {
+            background-color: var(--tw-bg-base);
+            --tw-bg-opacity: 1;
+            --tw-bg-base: rgb(0 0 0 / var(--tw-bg-opacity, 1))
+          }
+          .bg-opacity-50 {
+            --tw-bg-opacity: 0.5
           }`.replace(/\n|\s|\t/g, "")
       );
     });

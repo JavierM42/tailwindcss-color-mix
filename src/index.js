@@ -18,6 +18,29 @@ module.exports = (options = {}) =>
   plugin(({ matchUtilities, theme, corePlugins }) => {
     const { bgMix, bgMixAmount, bgMixMethod } = { ...DEFAULTS, ...options };
 
+    // add --tw-bg-base to bg-utility
+    matchUtilities(
+      {
+        bg: (value) => {
+          if (!corePlugins("backgroundOpacity")) {
+            return {
+              "background-color": toColorValue(value),
+            };
+          }
+
+          return {
+            backgroundColor: "var(--tw-bg-base)",
+            ...withAlphaVariable({
+              color: value,
+              property: "--tw-bg-base",
+              variable: "--tw-bg-opacity",
+            }),
+          };
+        },
+      },
+      { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
+    );
+
     // add bg-mix utility
     matchUtilities(
       {
@@ -34,10 +57,7 @@ module.exports = (options = {}) =>
           };
         },
       },
-      {
-        values: flattenColorPalette(theme("backgroundColor")),
-        type: ["color", "any"],
-      }
+      { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
     );
 
     // add bg-mix-amount utility
@@ -73,37 +93,14 @@ module.exports = (options = {}) =>
       }
     );
 
-    const bgValues = flattenColorPalette(theme("backgroundColor"));
+    /* use cascading to override opacity we define with our custom bg utility
+      this is not ideal because we duplicate tailwind's bg-opacity
+      TODO: come up with a better solution
+    */
     matchUtilities(
       {
-        bg: (value) => {
-          if (!corePlugins("backgroundOpacity")) {
-            return { "background-color": toColorValue(value) };
-          }
-
-          // is arbitrary
-          if (!Object.values(bgValues).includes(value)) {
-            return {
-              "background-color": withAlphaValue(
-                value,
-                "var(--tw-bg-opacity, 1)",
-                value
-              ),
-              ...withAlphaVariable({
-                color: value,
-                property: "--tw-bg-base",
-                variable: "--tw-bg-opacity",
-              }),
-            };
-          }
-
-          return withAlphaVariable({
-            color: value,
-            property: "--tw-bg-base",
-            variable: "--tw-bg-opacity",
-          });
-        },
+        "bg-opacity": (value) => ({ "--tw-bg-opacity": value }),
       },
-      { type: "color", values: bgValues }
+      { values: theme("opacity"), type: "number" }
     );
   });
