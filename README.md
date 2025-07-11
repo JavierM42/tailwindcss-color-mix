@@ -1,3 +1,7 @@
+# obsolete as of tailwind v4
+
+---
+
 # tailwindcss-color-mix
 
 ![Banner](https://raw.githubusercontent.com/JavierM42/tailwindcss-color-mix/master/image.png)
